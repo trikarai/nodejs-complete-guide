@@ -3,15 +3,24 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
+        title #{docTitle}
     body 
         header.header
             h1 Welcome to the Shop
             nav
             ul
                 li: a(href="/") Home
-                li: a(href="/products") Products
+                li: a(href="/admin/add-product") Products
         main
-            block content                   
-        footer.footer
+            if prods.length <= 0
+                h2 No Products Found.
+            else
+                div.grid 
+                    each product in prods
+                        .card
+                            h2 #{product.title}
+                            p #{product.description}
+                            p $#{product.price}
+                            a(href="/product/#{product.id}") Details
+                            hr
             p &copy; 2025 by Tri   
