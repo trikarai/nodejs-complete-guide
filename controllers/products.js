@@ -1,4 +1,4 @@
-const products = [];
+const Product = require('../models/product'); // Import the Product class
 
 exports.getAddProducts = (req, res, next) => {
     res.render('add-product', {
@@ -11,6 +11,7 @@ exports.getAddProducts = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
+    const products = Product.fetchAll();
      res.render('shop', {
         prods: products,
         pageTitle: 'Shop',
@@ -21,26 +22,8 @@ exports.getProducts = (req, res, next) => {
       });
 };
 
-exports.getProductById = (req, res, next) => {
-    const productId = req.params.productId;
-    const product = products.find(p => p.id === productId);
-    if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json({ product: product });
-};
-
 exports.postAddProduct = (req, res, next) => {
-    products.push({ title: req.body.title });
+    const product = new Product(req.body.title);
+    product.save();
     res.redirect('/');
-};
-
-exports.deleteProduct = (req, res, next) => {
-    const productId = req.params.productId;
-    const productIndex = products.findIndex(p => p.id === productId);
-    if (productIndex === -1) {
-        return res.status(404).json({ message: 'Product not found' });
-    }
-    products.splice(productIndex, 1);
-    res.status(200).json({ message: 'Product deleted' });
 };
