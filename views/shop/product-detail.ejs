@@ -12,10 +12,7 @@
                     <h2> <%= product.title %> </h2>
                     <p> <%= product.description %> </p>
                     <p> $<%= product.price %> </p>
-                    <form action="/cart" method="POST">
-                        <input type="hidden" name="productId" value="<%= product.id %>">
-                        <button type="submit" class="btn">Add to Cart</button>
-                    </form>
+                    <%- include('../includes/add-to-cart.ejs', {product}) %>
                 </div>
         </main>
         <%- include('../includes/end.ejs') %>

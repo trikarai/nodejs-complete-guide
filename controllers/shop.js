@@ -40,6 +40,12 @@ exports.getCarts = (req, res, next) => {
     });
 };
 
+exports.postCarts = (req, res, next) => {
+    const productId = req.body.productId;
+    console.log(productId);
+    res.redirect('/cart');
+};
+
 exports.getOrders = (req, res, next) => {
     res.render('shop/order', {
       pageTitle: 'Your Orders',
