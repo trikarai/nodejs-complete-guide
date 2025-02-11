@@ -15,6 +15,8 @@ const sequelize = require('./utils/database');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const path = require('path');
+const Product = require('./models/product');
+const User = require('./models/user');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,7 +33,10 @@ app.use(errorController.get404Page);
 
 const server = http.createServer(app);
 
-sequelize.sync()
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
+sequelize.sync({force: true})
   .then(() => {
     console.log('Database connected!');
     server.listen(3000);
