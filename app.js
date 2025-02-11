@@ -10,6 +10,8 @@ app.set('views', 'views');
 
 const errorController = require('./controllers/error');
 
+const sequelize = require('./utils/database');
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const path = require('path');
@@ -29,4 +31,11 @@ app.use(errorController.get404Page);
 
 const server = http.createServer(app);
 
-server.listen(3000);
+sequelize.sync()
+  .then(() => {
+    console.log('Database connected!');
+    server.listen(3000);
+  })
+  .catch(err => {
+    console.log(err);
+});
