@@ -22,6 +22,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
+  User.findByPk(1).then(user => {
+    req.user = user;
+    next();
+  })
+  .catch(err => console.log(err));
+});
+
+app.use((req, res, next) => {
       res.locals.path = req.path; // Makes path available in all views
       next();
   });
@@ -36,11 +44,20 @@ const server = http.createServer(app);
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
 
-sequelize.sync({force: true})
-  .then(() => {
-    console.log('Database connected!');
-    server.listen(3000);
-  })
+sequelize.sync()
+.then(() => {
+  return User.findByPk(1);
+})
+.then(user => {
+  if (!user) {
+    return User.create({ name: 'Tri', email: 'hello@trisutrisno.id', password: 'password' });
+  }
+  return user;
+})
+.then(() => {
+  console.log('Database connected!');
+  server.listen(3000);
+})
   .catch(err => {
     console.log(err);
 });
