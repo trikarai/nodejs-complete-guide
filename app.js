@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
       res.locals.path = req.path; // Makes path available in all views
       next();
-  });
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
