@@ -10,7 +10,10 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  // const imageUrl = req.body.imageUrl;
+  const imageId = Math.floor(Math.random() * 999) + 1;
+
+  const imageUrl = `https://picsum.photos/id/${imageId}/200/100`;
   const price = req.body.price;
   const description = req.body.description;
 
@@ -59,7 +62,8 @@ exports.postEditProduct = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
+  // const updatedImageUrl = req.body.imageUrl;
+  const updatedImageUrl = `https://picsum.photos/id/${prodId}/200/100`;
   const updatedDesc = req.body.description;
 
   Product.findByPk(prodId)
