@@ -7,7 +7,7 @@ class Product {
     this.price = price;
     this.imageUrl = imageUrl
     this.description = description
-    this._id = new ObjectId(id)
+    this._id = id ? new ObjectId(id) : null
   }
 
   save(){
@@ -18,12 +18,13 @@ class Product {
         dbOp = db.collection("products").updateOne({ _id: new ObjectId(this._id) }, { $set: this });
       } else {
         dbOp = db.collection("products").insertOne(this);
-      }
-      return dbOp.then((result) => {
-        console.log(result) 
-      }).catch((err) => {
-        console.log(err)
-      });
+    }
+
+    return dbOp.then((result) => {
+      console.log(result) 
+    }).catch((err) => {
+      console.log(err)
+    });
   }
 
   static fetchAll() {
@@ -49,6 +50,18 @@ class Product {
       })
       .catch(err =>{
         console.log(err);
+      })
+  }
+
+  static deleteById(prodId){
+    const db = getDB()
+    return db.collection('products')
+      .deleteOne({ _id: new ObjectId(prodId) })
+      .then(result => {
+        console.log("Deleted")
+      })
+      .catch(err => {
+        console.log(err)
       })
   }
 } 
