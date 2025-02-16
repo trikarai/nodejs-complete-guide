@@ -58,38 +58,47 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const user = req.user
-  const prodId = req.body.productId;
+  const prodId = req.body.productId;  
+  Product.findById(prodId).then(product => {
+     return user.addToCart(product);
+  })
+  .then(result => {
+    console.log(result)
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
-  let fetchedCart;
-  let newQuantity = 1;
+  // let fetchedCart;
+  // let newQuantity = 1;
   
-  user.getCart().then(cart => {
-    fetchedCart = cart;
-    return cart.getProducts({where: {id: prodId}});
-  })
-  .then(products => {
-    let product;
-    if(products.length > 0){
-      product = products[0];
-    }
-    if(product){
-      const oldQuantity = product.cartItem.quantity;
-      newQuantity = oldQuantity + 1;
-      return product;
-    }
-    return Product.findByPk(prodId).then(product => { 
-      return product;
-    }).catch(err => console.log(err));
-  })
-  .then((product) => {
-      return fetchedCart.addProduct(product, {
-        through: { quantity: newQuantity },
-      });
-  })
-  .then(() => {
-      res.redirect('/cart');
-   })
-  .catch(err => console.log(err));
+  // user.getCart().then(cart => {
+  //   fetchedCart = cart;
+  //   return cart.getProducts({where: {id: prodId}});
+  // })
+  // .then(products => {
+  //   let product;
+  //   if(products.length > 0){
+  //     product = products[0];
+  //   }
+  //   if(product){
+  //     const oldQuantity = product.cartItem.quantity;
+  //     newQuantity = oldQuantity + 1;
+  //     return product;
+  //   }
+  //   return Product.findByPk(prodId).then(product => { 
+  //     return product;
+  //   }).catch(err => console.log(err));
+  // })
+  // .then((product) => {
+  //     return fetchedCart.addProduct(product, {
+  //       through: { quantity: newQuantity },
+  //     });
+  // })
+  // .then(() => {
+  //     res.redirect('/cart');
+  //  })
+  // .catch(err => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
