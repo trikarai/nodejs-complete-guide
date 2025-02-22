@@ -65,21 +65,26 @@ exports.postEditProduct = (req, res, next) => {
   const updatedImageUrl = `https://picsum.photos/id/${imageId}/200/100`;
   const updatedDesc = req.body.description;
  
-  const product = new Product(updatedTitle, updatedPrice, updatedImageUrl, updatedDesc, prodId)
-
-  product
-    .save()
-    .then(() => {
-      console.log("Product Updated");
-      res.redirect("/admin/products");
+  Product
+    .findById(prodId)
+    .then(product => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.imageUrl = updatedImageUrl;
+      product.description = updatedDesc;
+      return product.save();
     })
-    .catch((err) => {
+    .then(() => {
+      console.log('Product Updated');
+      res.redirect('/admin/products');
+    })
+    .catch(err => {
       console.log(err);
     });
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then(products => {
       res.render('admin/products', {
         prods: products,
