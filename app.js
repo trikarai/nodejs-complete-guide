@@ -1,8 +1,11 @@
+require("dotenv").config();
+
 const http = require('http');
 const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -11,7 +14,6 @@ app.set('views', 'views');
 
 const errorController = require('./controllers/error');
 
-const mongoConnect = require('./utils/database').mongoConnect;
 const User = require('./models/user');
 
 // Routes
@@ -42,6 +44,9 @@ app.use(errorController.get404Page);
 
 const server = http.createServer(app);
 
-mongoConnect(() => {
-   server.listen(3000);
-});
+ mongoose
+  .connect(process.env.MONGODB_URI).then(() => {
+    app.listen(3000);
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => console.log(err));
