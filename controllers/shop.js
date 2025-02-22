@@ -91,7 +91,7 @@ exports.postOrder = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
   const user = req.user;
 
-  user.getOrders({include: ['products']})
+  user.getOrders()
     .then(orders => { 
        res.render('shop/orders', {
         orders: orders,
