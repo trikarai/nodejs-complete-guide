@@ -42,13 +42,15 @@ exports.getCart = (req, res, next) => {
 
   const user = req.user
 
-  user.getCart().then(products => {
-    res.render('shop/cart', {
-      products: products,
-      pageTitle: 'Your Cart',
-      path: '/cart'
-    });
-    
+  user
+    .populate('cart.items.productId')
+    .then(user => {
+        const products = user.cart.items;
+        res.render('shop/cart', {
+          products: products,
+          pageTitle: 'Your Cart',
+          path: '/cart'
+      }); 
   }).catch(err => console.log(err));
 };
 
