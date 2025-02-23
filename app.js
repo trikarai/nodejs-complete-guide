@@ -8,8 +8,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const app = express();
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: "sessions",
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -29,7 +34,8 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: store,
   })
 );
 
