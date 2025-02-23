@@ -51,80 +51,9 @@ userSchema.methods.deleleItemFromCart = function (productId) {
   return this.save();
 };
 
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  return this.save();
+};
+
 module.exports = mongoose.model("User", userSchema);
-
-// const { ObjectId } = require("mongodb");
-// const { getDB } = require("../utils/database");
-
-// class User {
-//   constructor(username, email, cart, id) {
-//     this.username = username;
-//     this.email = email;
-//     this.cart = cart; // { items: [] }
-//     this._id = id;
-//   }
-
-//   save() {
-//     const db = getDB();
-
-//     let dbOp;
-
-//     dbOp = db.collection("users").insetOne(this);
-
-//     return dbOp
-//       .then((result) => {
-//         console.log(result);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   }
-
-//   addOrder() {
-//     const db = getDB();
-//     return this.getCart()
-//       .then((products) => {
-//         const order = {
-//           items: products,
-//           user: {
-//             _id: new ObjectId(this._id),
-//             name: this.username,
-//           },
-//         };
-//         return db.collection("orders").insertOne(order);
-//       })
-//       .then((result) => {
-//         this.cart = { items: [] };
-//         return db
-//           .collection("users")
-//           .updateOne(
-//             { _id: new ObjectId(this._id) },
-//             { $set: { cart: { items: [] } } }
-//           );
-//       });
-//   }
-
-//   getOrders() {
-//     const db = getDB();
-//     return db
-//       .collection("orders")
-//       .find({ "user._id": new ObjectId(this._id) })
-//       .toArray();
-//   }
-
-//   static findById(userId) {
-//     const db = getDB();
-
-//     return db
-//       .collection("users")
-//       .findOne({ _id: new ObjectId(userId) })
-//       .then((result) => {
-//         return result;
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   }
-// }
-
-// module.exports = User;
