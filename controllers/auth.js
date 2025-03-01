@@ -40,25 +40,27 @@ exports.postSignup = (req, res, next) => {
   // check if the email is already in the database
   User.findOne({ email: email })
     .then((userDoc) => {
-      if (userDoc) {
-        return res.redirect("/signup");
-      }
-      return bcrypt.hash(password, 12); // hash the password
-    })
-    .then((hashedPassword) => {
-      // if the email is not in the database, create a new user
-      const user = new User({
-        email: email,
-        password: hashedPassword,
-        cart: { items: [] },
+    if (userDoc) {
+      return res.redirect("/signup");
+    }
+    // if the email is not in the database, hash the password
+    return bcrypt
+      .hash(password, 12)
+      .then((hashedPassword) => {
+        // create a new user with the email and hashed password
+        const user = new User({
+          email: email,
+          password: hashedPassword,
+          cart: { items: [] },
       });
-      return user.save();
-    })
-    .then((result) => {
-      res.redirect("/login");
-    })
-    .catch((err) => console.log(err));
-};
+        return user.save();
+      })
+      .then((result) => {
+        res.redirect("/login");
+      })
+      .catch((err) => console.log(err));
+    });
+}
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
