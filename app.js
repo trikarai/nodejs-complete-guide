@@ -40,15 +40,6 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  User.findById("67ba7bd70514035140f5d147")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
- });
-
-app.use((req, res, next) => {
       res.locals.path = req.path; // Makes path available in all views
       next();
 });

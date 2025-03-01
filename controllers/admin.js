@@ -2,10 +2,11 @@ const { ObjectId } = require('mongodb');
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
-  res.render('admin/edit-product', {
-    pageTitle: 'Add Product',
-    path: '/admin/add-product',
-    editing: false
+  res.render("admin/edit-product", {
+    pageTitle: "Add Product",
+    path: "/admin/add-product",
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -18,7 +19,7 @@ exports.postAddProduct = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const userId = req.user._id;
+  const userId = req.session.user
 
   const product = new Product({ title, price, imageUrl, description, userId });
      
@@ -44,12 +45,13 @@ exports.getEditProduct = (req, res, next) => {
        if (!product) {
         return res.redirect('/');
       }
-      res.render('admin/edit-product', {
-        pageTitle: 'Edit Product',
-        path: '/admin/edit-product',
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
         editing: editMode,
-        product: product
-      })
+        product: product,
+        isAuthenticated: req.session.isLoggedIn,
+      });
     })
     .catch(err => {
       console.log(err);
@@ -88,10 +90,11 @@ exports.getProducts = (req, res, next) => {
     // .select('title price imageUrl -description')
     // .populate('userId', name)
     .then(products => {
-      res.render('admin/products', {
+      res.render("admin/products", {
         prods: products,
-        pageTitle: 'Admin Products',
-      })
+        pageTitle: "Admin Products",
+        isAuthenticated: req.session.isLoggedIn,
+      });
     }).catch(err => {
       console.log(err);
     });
