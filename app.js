@@ -66,18 +66,18 @@ const server = http.createServer(app);
 
  mongoose
   .connect(process.env.MONGODB_URI).then(() => {
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: "Tri",
-          email: "hello@trisutrisno.id",
-          cart: {
-            items: [],
-          },
-        });
-      user.save();
-      }
-    });
+    // User.findOne().then(user => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: "Tri",
+    //       email: "hello@trisutrisno.id",
+    //       cart: {
+    //         items: [],
+    //       },
+    //     });
+    //   user.save();
+    //   }
+    // });
     server.listen(3000);
     console.log('Connected to MongoDB');
   })

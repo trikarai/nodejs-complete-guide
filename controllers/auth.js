@@ -29,7 +29,30 @@ exports.postLogin = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword
+
+  // check if the email is already in the database
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      // if the email is not in the database, create a new user
+      const user = new User({
+        email: email,
+        password: password,
+        cart: { items: [] },
+      });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((err) => console.log(err));
+};
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
