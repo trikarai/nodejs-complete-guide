@@ -2,19 +2,17 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 exports.getLogin = (req, res, next) => {
-  res.render('auth/login', {
-    path: '/login',
-    pageTitle: 'Login',
-    isAuthenticated: false
-  });
+  res.render("auth/login", {
+    path: "/login",
+    pageTitle: "Login",
+    });
 };
 
 exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
-    isAuthenticated: false,
-  });
+   });
 };
 
 exports.postLogin = (req, res, next) => {
@@ -52,8 +50,6 @@ exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword
-
-   
 
   // check if the email is already in the database
   User.findOne({ email: email })
