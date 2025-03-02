@@ -156,3 +156,29 @@ exports.postReset = (req, res, next) => {
       // });
   });
 }
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user) => {
+      let message = req.flash("error");
+
+      if (message.length > 0) {
+        message = message[0];
+      } else {
+        message = null;
+      }
+
+      res.render("auth/reset-password", {
+        path: "/reset",
+        pageTitle: "New Password",
+        errorMessage: message,
+        userId: user._id.toString(),
+        passwordToken: token,
+      });
+    }
+  )
+  .catch((err) => {
+    console.log(err);
+  });
+}
