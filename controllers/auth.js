@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
+const { validationResult } = require('express-validator');
+ 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
@@ -82,38 +84,38 @@ exports.postSignup = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword
 
-  // check if the email is already in the database
-  User.findOne({ email: email })
-    .then((userDoc) => {
-    if (userDoc) {
-      req.flash("error", "Email already exists.");
-      return res.redirect("/signup");
-    }
-    // if the email is not in the database, hash the password
-    return bcrypt
-      .hash(password, 12)
-      .then((hashedPassword) => {
-        // create a new user with the email and hashed password
-        const user = new User({
-          email: email,
-          password: hashedPassword,
-          cart: { items: [] },
-      });
-        return user.save();
-      })
-      .then((result) => {
-        res.redirect("/login");
-        return transporter
-          .sendMail({
-            to: email,
-            from: process.env.EMAIL_FROM,
-            subject: "Signup succeeded!",
-            html: "<h1>You successfully signed up!</h1>",
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg,
     });
+  }
+
+  // if the email is not in the database, hash the password
+  return bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      // create a new user with the email and hashed password
+      const user = new User({
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] },
+    });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+      return transporter
+        .sendMail({
+          to: email,
+          from: process.env.EMAIL_FROM,
+          subject: "Signup succeeded!",
+          html: "<h1>You successfully signed up!</h1>",
+        })
+    .catch((err) => console.log(err));
+  });
 }
 
 exports.postLogout = (req, res, next) => {
