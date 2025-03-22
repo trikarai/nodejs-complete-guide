@@ -1,6 +1,16 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY,
+    },
+  })
+);
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");  
@@ -93,6 +103,14 @@ exports.postSignup = (req, res, next) => {
       })
       .then((result) => {
         res.redirect("/login");
+        return transporter
+          .sendMail({
+            to: email,
+            from: process.env.EMAIL_FROM,
+            subject: "Signup succeeded!",
+            html: "<h1>You successfully signed up!</h1>",
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
     });
@@ -136,24 +154,20 @@ exports.postReset = (req, res, next) => {
         }
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000;
-        user.save();
-        return res.redirect("/reset");
-      })
+        return user.save();
+       }) 
       .then((result) => {
-        console.log(`http://localhost:3000/reset/${token}`);
+        res.redirect("/");
+        transporter.sendMail({
+          to: req.body.email,
+          from: process.env.EMAIL_FROM,
+          subject: "Password Reset",
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
+          `,
+        });
       });
-      // .then((result) => {
-        // res.redirect("/");
-        // transporter.sendMail({
-        //   to: req.body.email,
-        //   from: "shop@node-complete.com",
-        //   subject: "Password Reset",
-        //   html: `
-        //     <p>You requested a password reset</p>
-        //     <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
-        //   `,
-        // });
-      // });
   });
 }
 
