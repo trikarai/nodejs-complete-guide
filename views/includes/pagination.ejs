@@ -1,0 +1,15 @@
+<section class="pagination">
+    <% if (meta.hasPreviousPage) { %>
+            <a href="/?page=<%= meta.previousPage %>" class="btn">Previous</a>
+    <% } %>
+    <% if (meta.currentPage != 1 && meta.previousPage != 1 ) { %>
+        <a href="/?page=<%= meta.firstPage %>" class="btn"><%= (meta.firstPage) %></a>
+    <% } %>
+        <a href="/?page=<%= meta.currentPage %>" class="btn"><%= (meta.currentPage) %></a>
+    <% if (meta.lastPage != meta.currentPage && meta.nextPage != meta.lastPage) { %>
+        <a href="/?page=<%= meta.lastPage %>" class="btn"><%= (meta.lastPage) %></a>
+    <% } %>
+                    <% if (meta.hasNextPage) { %>
+            <a href="/?page=<%= meta.nextPage %>" class="btn">Next</a>
+    <% } %>
+</section>
