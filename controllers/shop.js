@@ -156,6 +156,30 @@ exports.postCartDeleteProduct = (req, res, next) => {
     });
 };
 
+exports.getCheckout = (req, res, next) => {
+  const user = req.user;
+
+  user
+    .populate("cart.items.productId")
+    .then((user) => {
+      const products = user.cart.items;
+      res.render("shop/checkout", {
+        products: products,
+        pageTitle: "Checkout",
+        path: "/checkout",
+        totalPrice: products.reduce((total, item) => {
+          return total + item.quantity * item.productId.price;
+        }, 0),
+        isAuthenticated: req.session.isLoggedIn,
+      });
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+}
+
 exports.postOrder = (req, res, next) => {
   const user = req.user;
   user
