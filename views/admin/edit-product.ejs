@@ -16,7 +16,9 @@
             </div>
             <div class="form-control">
                 <label for="title">Title</label>
-                <input type="text" name="title" id="title" value="<% if (editing) { %><%= product.title %><% } %>">
+                <input 
+                    class="<%= validationErrors.find(e => e.path === 'title') ? 'invalid' : '' %>" 
+                    type="text" name="title" id="title" value="<% if (editing) { %><%= product.title %><% } %>">
             </div>
             <!-- <div class="form-control">
                 <label for="imageUrl">Image URL</label>
@@ -33,11 +35,15 @@
             </div>
             <div class="form-control">
                 <label for="price">Price</label>
-                <input type="number" name="price" id="price" step="0.01" value="<% if (editing) { %><%= product.price %><% } %>">
+                <input 
+                    class="<%= validationErrors.find(e => e.path === 'price') ? 'invalid' : '' %>" 
+                    type="number" name="price" id="price" step="0.01" value="<% if (editing) { %><%= product.price %><% } %>">
             </div>
             <div class="form-control">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" rows="5"><% if (editing) { %><%= product.description %><% } %></textarea>
+                <textarea 
+                    class="<%= validationErrors.find(e => e.path === 'description') ? 'invalid' : '' %>" 
+                    name="description" id="description" rows="5"><% if (editing) { %><%= product.description %><% } %></textarea>
             </div>
             <% if (editing) { %>
                 <input type="hidden" value="<%= product._id %>" name="productId">
