@@ -41,17 +41,36 @@ exports.getProduct = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
 
   const page = req.query.page || 1;
-  const ITEM_PER_PAGE = 2;
-  const startIndex = (page - 1) * ITEM_PER_PAGE;
- 
-  Product.find()
-    .skip(startIndex)
-    .limit(ITEM_PER_PAGE)
+   const ITEM_PER_PAGE = 2;
+  let startIndex = (page - 1) * ITEM_PER_PAGE;
+  let totalItems = 0;
+  
+  Product
+    .find()
+    .countDocuments()
+    .then((numProducts) => {
+			console.log("TCL: exports.getIndex -> numProducts", numProducts)
+      totalItems = +numProducts;
+      return Product.find()
+        .skip(startIndex)
+        .limit(ITEM_PER_PAGE);
+    })
     .then((products) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
         path: "/",
+        meta: {
+          totalItems: totalItems,
+          currentPage: +page,
+          firstPage: 1,
+          hasNextPage: ITEM_PER_PAGE * page < totalItems,
+          hasPreviousPage: parseInt(page) > 1,
+          nextPage: parseInt(page) + 1,
+          previousPage: parseInt(page) - 1,
+          lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
+          totalPages: Math.ceil(totalItems / ITEM_PER_PAGE),
+        },
         isAuthenticated: req.session.isLoggedIn,
       });
     })
