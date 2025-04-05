@@ -239,7 +239,43 @@ form {
   border-color: #580000;
   background: #ffcece;
 }
-
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  gap: 1rem;
+}
+.pagination__item {
+  margin: 0 0.5rem;
+}
+.pagination__item a {
+  text-decoration: none;
+  color: #00695c;
+  font-size: 1.5rem;
+  padding: 0.5rem 2rem;
+}
+.pagination__item a:active,
+.pagination__item a:hover,
+.pagination__item a.active {
+  background: #00695c;
+  color: white;
+  border-radius: 3px;
+}
+.pagination__item a.disabled {
+  background: #ccc;
+  color: white;
+  pointer-events: none;
+}
+.pagination__item a.disabled:hover {
+  background: #ccc;
+  color: white;
+}
+.pagination__item a.disabled:active {
+  background: #ccc;
+  color: white;
+}
+ 
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;

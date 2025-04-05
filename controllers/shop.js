@@ -39,7 +39,14 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
+
+  const page = req.query.page || 1;
+  const ITEM_PER_PAGE = 2;
+  const startIndex = (page - 1) * ITEM_PER_PAGE;
+ 
   Product.find()
+    .skip(startIndex)
+    .limit(ITEM_PER_PAGE)
     .then((products) => {
       res.render("shop/index", {
         prods: products,
