@@ -18,6 +18,19 @@
                 <h2>Total Price: $<%= totalPrice %></h2>
             </div>
             <hr>
+            <div class="centered">
+                <button id="order-button">Order</button>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script>
+                    const stripe = Stripe('<%= stripePublicKey %>');
+                    const orderButton = document.getElementById('order-button');
+                    orderButton.addEventListener('click', () => {
+                            stripe.redirectToCheckout({ 
+                                sessionId: '<%= sessionId %>'
+                            });
+                    });
+                </script>
+            </div>
         <% } else { %>
             <h1>No Products to checkout!</h1>
         <% } %>
