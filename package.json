@@ -4,7 +4,7 @@
   "description": "Complete Node.js Guide",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon app.js",
     "start-server": "node app.js"
   },
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "chai": "^5.2.0",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
     "crypto": "^1.0.1",
@@ -25,6 +26,7 @@
     "express-handlebars": "^8.0.1",
     "express-session": "^1.18.1",
     "express-validator": "^7.2.1",
+    "mocha": "^11.1.0",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.1",
     "multer": "^1.4.5-lts.2",
